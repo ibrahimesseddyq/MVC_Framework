@@ -1,37 +1,32 @@
 <?php
  namespace app\core;
 class Router {
-    private $dev="";
+    private $dev="/contacts/mvc/public/";
     public Request $request;
     public  $routes=[];
     public function __construct(){
         $this->request=new Request();
+        echo $this->request->getPath();
     }
     public function get($path,$callback){
         $this->routes['GET'][$this->dev.$path]=$callback;
+        echo " Path 1 :".$this->dev.$path."<br>";
     }
     public function resolve(){
         $path= $this->request->getPath();
+        echo " Path 2 :".$path."<br>";
         $method = $this->request->getMethod();
         $callback= $this->routes[$method][$path] ?? false;
-        if($callback === false){
-            return "404 Not Found";
-    
-        }
-        if(is_string($callback)){
+        var_dump($callback);
+        if($callback === false) return "404 Not Found";
+        if(is_string($callback))
             return $this->renderView($callback);
-        }
         return call_user_func($callback);
     }
     function renderView($view){
         $layout= $this->layoutContent();
         $view = $this->renderOnlyView($view);
-        $contentPos = strpos($layout,"{{change}}") ;
-        $str_arr= str_split($layout);
-        $first_part= implode(array_slice($str_arr,0,$contentPos-1));
-        $second_part= implode(array_slice($str_arr,$contentPos+10,-1));
-        $full= $first_part.$view.$second_part;
-        echo $full;
+        return str_replace("{{change}}",$view,$layout);
     }
     function layoutContent(){
         ob_start();
