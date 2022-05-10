@@ -1,7 +1,7 @@
 <?php
  namespace app\core;
 class Router {
-    private $dev="/contacts/mvc/public/";
+    private $dev="/mvc_framework/public/";
     public Request $request;
     public  $routes=[];
     public function __construct(){
